@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container, makeStyles } from '@material-ui/core';
+import { Board } from './components/Board';
+import { fetchPeople } from './services/fetchPeople';
 
-function App() {
+const useStyles = makeStyles({
+  container: {
+    textAlign: 'center',
+  },
+  header: {
+    textAlign: 'center',
+  }
+})
+
+const App = () => {
+  const classes = useStyles();
+  fetchPeople();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container className={classes.container}>
+      <h1 className={classes.header}>STAR WARS GAME</h1>
+      <Board />
+    </Container>
   );
 }
 
