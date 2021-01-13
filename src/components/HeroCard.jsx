@@ -8,17 +8,22 @@ const useStyles = makeStyles({
     fontSize: 20,
   },
   heroData: {
-    textTransform: 'capitalize',
+    minWidth: 250,
     margin: '10px 0',
+    textTransform: 'capitalize',
+  },
+  hidden: {
+    display: 'none'
   }
 })
 
 export const HeroCard = (props) => {
   const classes = useStyles();
   const { name, birth_year, mass, height } = props.person;
+  const { isHidden } = props;
 
   return (
-    <Card>
+    <Card className={`${isHidden ? classes.hidden : ''}`}>
       <CardContent>
         <ul className={classes.heroDetails}>
           <li className={classes.heroData}>name: {name}</li>
