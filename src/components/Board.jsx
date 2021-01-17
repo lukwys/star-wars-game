@@ -27,7 +27,11 @@ export const Board = () => {
       setPeople(people);
     };
     fetchData();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    compareMass();
+  }, [playerOne, playerTwo]);
 
   const setPlayer = (people) => {
     const person = people[Math.floor(Math.random() * people.length)];
@@ -36,11 +40,11 @@ export const Board = () => {
   };
 
   const compareMass = () => {
-    console.log(playerOne.mass)
-    console.log(playerTwo.mass)
-    if (playerOne.mass > playerTwo.mass) setPlayerOneScore(playerOneScore++);
-    else if (playerOne.mass < playerTwo.mass) setPlayerTwoScore(playerTwoScore++);
-    console.log('draw');
+    const playerOneMass = parseInt(playerOne.mass);
+    const playerTwoMass = parseInt(playerTwo.mass);
+
+    if (playerOneMass > playerTwoMass) setPlayerOneScore(playerOneScore + 1);
+    else if (playerOneMass < playerTwoMass) setPlayerTwoScore(playerTwoScore + 1);
   }
 
   const startFight = () => {
@@ -48,7 +52,6 @@ export const Board = () => {
 
     setPlayerOne(setPlayer(people));
     setPlayerTwo(setPlayer(people));
-    compareMass();
   }
 
   return (
@@ -59,7 +62,7 @@ export const Board = () => {
           <HeroCard isHidden = { isPlayerDetailsHidden } person = { playerOne } />
         </div>
         <div>
-          <Score score={0} />
+          <Score score={playerTwoScore} />
           <HeroCard isHidden = { isPlayerDetailsHidden } person = { playerTwo } />
         </div>
       </div>
