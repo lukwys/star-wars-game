@@ -2,6 +2,7 @@ import { Button, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { fetchPeople } from '../services/fetchPeople';
 import { HeroCard } from "./HeroCard"
+import { InfoModal } from './InfoModal';
 import { Score } from './Score';
 
 const useStyles = makeStyles({
@@ -15,10 +16,12 @@ export const Board = () => {
   const classes = useStyles();
   const [people, setPeople] = useState([]);
   const [playerOne, setPlayerOne] = useState({});
-  let [playerOneScore, setPlayerOneScore] = useState(0);
+  const [playerOneScore, setPlayerOneScore] = useState(0);
   const [playerTwo, setPlayerTwo] = useState({});
-  let [playerTwoScore, setPlayerTwoScore] = useState(0);
+  const [playerTwoScore, setPlayerTwoScore] = useState(0);
   const [isPlayerDetailsHidden, setIsPlayerDetailsHidden] = useState(true);
+  const [isOpened, setIsOpened] = useState(false);
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,8 +46,13 @@ export const Board = () => {
     const playerOneMass = parseInt(playerOne.mass);
     const playerTwoMass = parseInt(playerTwo.mass);
 
-    if (playerOneMass > playerTwoMass) setPlayerOneScore(playerOneScore + 1);
-    else if (playerOneMass < playerTwoMass) setPlayerTwoScore(playerTwoScore + 1);
+    if (playerOneMass > playerTwoMass) {
+      setPlayerOneScore(playerOneScore + 1);
+      setWinner('player one wins');
+    } else if (playerOneMass < playerTwoMass) {
+      setPlayerTwoScore(playerTwoScore + 1);
+      setWinner('player two wins');
+    }
   }
 
   const startFight = () => {
@@ -52,6 +60,14 @@ export const Board = () => {
 
     setPlayerOne(setPlayer(people));
     setPlayerTwo(setPlayer(people));
+    setIsOpened(true);
+  }
+
+  const resetGame = () => {
+    setPlayerOneScore(0);
+    setPlayerTwoScore(0);
+    setIsPlayerDetailsHidden(true);
+    setIsOpened(false);
   }
 
   return (
@@ -67,6 +83,7 @@ export const Board = () => {
         </div>
       </div>
       <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
+      <InfoModal isOpened={isOpened} resetGame={resetGame} winner={winner}/>
     </section>
   )
 }
