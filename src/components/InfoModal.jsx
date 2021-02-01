@@ -22,18 +22,18 @@ const useStyles = makeStyles({
 
 export const InfoModal = (props) => {
   const classes = useStyles();
-  const { isOpened, resetGame, winner } = props;
+  const { isOpened, closeModal, winner } = props;
 
   return (
     <Modal
       open={isOpened}
-      onClose={resetGame}
+      onClose={closeModal}
     >
       <div className={classes.modal}>
         <div className={classes.info}>
           <span>{`${winner? winner : 'draw'}`}</span>
         </div>
-        <Button variant="contained" color="secondary" onClick={resetGame}>Retry</Button>
+        <Button variant="contained" color="secondary" onClick={closeModal}>Play again</Button>
       </div>
     </Modal>
   )
