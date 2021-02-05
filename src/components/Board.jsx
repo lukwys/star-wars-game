@@ -1,6 +1,6 @@
 import { Button, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { fetchPeople } from '../services/fetchPeople';
+import { fetchResource } from '../services/fetchResource';
 import { HeroCard } from "./HeroCard"
 import { InfoModal } from './InfoModal';
 import { Score } from './Score';
@@ -12,9 +12,10 @@ const useStyles = makeStyles({
   }
 })
 
-export const Board = () => {
+export const Board = (props) => {
+  const { resourceName } = props;
   const classes = useStyles();
-  const [people, setPeople] = useState([]);
+  const [resource, setResource] = useState([]);
   const [playerOne, setPlayerOne] = useState({});
   const [playerOneScore, setPlayerOneScore] = useState(0);
   const [playerTwo, setPlayerTwo] = useState({});
@@ -25,14 +26,27 @@ export const Board = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const people = await fetchPeople();
+      const resource = await fetchResource(resourceName);
 
-      setPeople(people);
+      setResource(resource);
     };
     fetchData();
-  }, []);
+  }, [resourceName]);
 
   useEffect(() => {
+    const compareMass = () => {
+      const playerOneMass = parseInt(playerOne.mass);
+      const playerTwoMass = parseInt(playerTwo.mass);
+  
+      if (playerOneMass > playerTwoMass) {
+        setPlayerOneScore(playerOneScore => playerOneScore + 1);
+        setWinner('player one wins');
+      } else if (playerOneMass < playerTwoMass) {
+        setPlayerTwoScore(playerTwoScore => playerTwoScore + 1);
+        setWinner('player two wins');
+      }
+    }
+
     compareMass();
   }, [playerOne, playerTwo]);
 
@@ -42,24 +56,11 @@ export const Board = () => {
     return person ? person : {};
   };
 
-  const compareMass = () => {
-    const playerOneMass = parseInt(playerOne.mass);
-    const playerTwoMass = parseInt(playerTwo.mass);
-
-    if (playerOneMass > playerTwoMass) {
-      setPlayerOneScore(playerOneScore + 1);
-      setWinner('player one wins');
-    } else if (playerOneMass < playerTwoMass) {
-      setPlayerTwoScore(playerTwoScore + 1);
-      setWinner('player two wins');
-    }
-  }
-
   const startFight = () => {
     if (isPlayerDetailsHidden) setIsPlayerDetailsHidden(false);
 
-    setPlayerOne(setPlayer(people));
-    setPlayerTwo(setPlayer(people));
+    setPlayerOne(setPlayer(resource));
+    setPlayerTwo(setPlayer(resource));
     setIsOpened(true);
   }
 

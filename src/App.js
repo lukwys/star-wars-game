@@ -1,6 +1,6 @@
-import { Container, makeStyles } from '@material-ui/core';
+import { Container, FormControl, InputLabel, makeStyles, MenuItem, Select } from '@material-ui/core';
+import { useState } from 'react';
 import { Board } from './components/Board';
-import { fetchPeople } from './services/fetchPeople';
 
 const useStyles = makeStyles({
   container: {
@@ -8,17 +8,31 @@ const useStyles = makeStyles({
   },
   header: {
     textAlign: 'center',
+  },
+  select: {
+    width: 100
   }
 })
 
 const App = () => {
   const classes = useStyles();
-  fetchPeople();
+  const [resource, setResource] = useState('people');
+
+  const onResourceChange = (event) => {
+    setResource(event.target.value);
+  }
 
   return (
     <Container className={classes.container}>
       <h1 className={classes.header}>STAR WARS GAME</h1>
-      <Board />
+      <FormControl>
+        <InputLabel>Resource</InputLabel>
+        <Select value={resource} className={classes.select} onChange={onResourceChange}>
+          <MenuItem value="people">peolpe</MenuItem>
+          <MenuItem value="starships">starships</MenuItem>
+        </Select>
+      </FormControl>
+      <Board resourceName={resource}/>
     </Container>
   );
 }
