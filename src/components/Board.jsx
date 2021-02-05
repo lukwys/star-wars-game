@@ -1,7 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { fetchResource } from '../services/fetchResource';
-import { HeroCard } from "./HeroCard"
+import { CardType } from './CardType';
 import { InfoModal } from './InfoModal';
 import { Score } from './Score';
 
@@ -76,11 +76,11 @@ export const Board = (props) => {
       <div className={classes.personWrapper}>
         <div>
           <Score score={playerOneScore} />
-          <HeroCard isHidden = { isPlayerDetailsHidden } person = { playerOne } />
+          <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerOne } cardType = { resourceName } />
         </div>
         <div>
           <Score score={playerTwoScore} />
-          <HeroCard isHidden = { isPlayerDetailsHidden } person = { playerTwo } />
+          <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerOne } cardType = { resourceName } />
         </div>
       </div>
       <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
