@@ -9,6 +9,13 @@ const useStyles = makeStyles({
   personWrapper: {
     display: 'flex',
     justifyContent: 'space-around',
+    marginBottom: 30
+  },
+  buttonsWrapper: {
+    width: '25%',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'column',
   }
 })
 
@@ -70,11 +77,15 @@ export const Board = (props) => {
     setIsOpened(true);
   }
 
+  const closeModal = () => {
+    setIsOpened(false);
+  }
+
   const resetGame = () => {
     setPlayerOneScore(0);
     setPlayerTwoScore(0);
     setIsPlayerDetailsHidden(true);
-    setIsOpened(false);
+    closeModal();
   }
 
   return (
@@ -89,8 +100,11 @@ export const Board = (props) => {
           <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerTwo } cardType = { resourceName } />
         </div>
       </div>
-      <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
-      <InfoModal isOpened={isOpened} resetGame={resetGame} winner={winner}/>
+      <div className={classes.buttonsWrapper}>
+        <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
+        <Button variant="contained" color="secondary" onClick={resetGame}>Restart</Button>
+      </div>
+      <InfoModal isOpened={isOpened} resetGame={resetGame} closeModal={closeModal} winner={winner}/>
     </section>
   )
 }
