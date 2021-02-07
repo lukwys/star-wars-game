@@ -1,7 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { fetchPeople } from '../services/fetchPeople';
-import { HeroCard } from "./HeroCard"
+import { fetchResource } from '../services/fetchResource';
+import { CardType } from './CardType';
 import { InfoModal } from './InfoModal';
 import { Score } from './Score';
 
@@ -12,9 +12,15 @@ const useStyles = makeStyles({
   }
 })
 
-export const Board = () => {
+const playerValue = {
+  people: 'mass',
+  starships: 'crew',
+}
+
+export const Board = (props) => {
+  const { resourceName } = props;
   const classes = useStyles();
-  const [people, setPeople] = useState([]);
+  const [resource, setResource] = useState([]);
   const [playerOne, setPlayerOne] = useState({});
   const [playerOneScore, setPlayerOneScore] = useState(0);
   const [playerTwo, setPlayerTwo] = useState({});
@@ -25,16 +31,30 @@ export const Board = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const people = await fetchPeople();
+      const resource = await fetchResource(resourceName);
 
-      setPeople(people);
+      setResource(resource);
     };
     fetchData();
-  }, []);
+  }, [resourceName]);
 
   useEffect(() => {
-    compareMass();
-  }, [playerOne, playerTwo]);
+    const comparePlayers = () => {
+      const value = playerValue[resourceName];
+      const playerOneValue = parseInt(playerOne[value]);
+      const playerTwoValue = parseInt(playerTwo[value]);
+  
+      if (playerOneValue > playerTwoValue) {
+        setPlayerOneScore(playerOneScore => playerOneScore + 1);
+        setWinner('player one wins');
+      } else if (playerOneValue < playerTwoValue) {
+        setPlayerTwoScore(playerTwoScore => playerTwoScore + 1);
+        setWinner('player two wins');
+      }
+    }
+
+    comparePlayers();
+  }, [playerOne, playerTwo, resourceName]);
 
   const setPlayer = (people) => {
     const person = people[Math.floor(Math.random() * people.length)];
@@ -42,24 +62,11 @@ export const Board = () => {
     return person ? person : {};
   };
 
-  const compareMass = () => {
-    const playerOneMass = parseInt(playerOne.mass);
-    const playerTwoMass = parseInt(playerTwo.mass);
-
-    if (playerOneMass > playerTwoMass) {
-      setPlayerOneScore(playerOneScore + 1);
-      setWinner('player one wins');
-    } else if (playerOneMass < playerTwoMass) {
-      setPlayerTwoScore(playerTwoScore + 1);
-      setWinner('player two wins');
-    }
-  }
-
   const startFight = () => {
     if (isPlayerDetailsHidden) setIsPlayerDetailsHidden(false);
 
-    setPlayerOne(setPlayer(people));
-    setPlayerTwo(setPlayer(people));
+    setPlayerOne(setPlayer(resource));
+    setPlayerTwo(setPlayer(resource));
     setIsOpened(true);
   }
 
@@ -75,11 +82,11 @@ export const Board = () => {
       <div className={classes.personWrapper}>
         <div>
           <Score score={playerOneScore} />
-          <HeroCard isHidden = { isPlayerDetailsHidden } person = { playerOne } />
+          <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerOne } cardType = { resourceName } />
         </div>
         <div>
           <Score score={playerTwoScore} />
-          <HeroCard isHidden = { isPlayerDetailsHidden } person = { playerTwo } />
+          <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerTwo } cardType = { resourceName } />
         </div>
       </div>
       <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
