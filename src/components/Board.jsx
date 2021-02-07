@@ -12,6 +12,11 @@ const useStyles = makeStyles({
   }
 })
 
+const playerValue = {
+  people: 'mass',
+  starships: 'crew',
+}
+
 export const Board = (props) => {
   const { resourceName } = props;
   const classes = useStyles();
@@ -34,21 +39,22 @@ export const Board = (props) => {
   }, [resourceName]);
 
   useEffect(() => {
-    const compareMass = () => {
-      const playerOneMass = parseInt(playerOne.mass);
-      const playerTwoMass = parseInt(playerTwo.mass);
+    const comparePlayers = () => {
+      const value = playerValue[resourceName];
+      const playerOneValue = parseInt(playerOne[value]);
+      const playerTwoValue = parseInt(playerTwo[value]);
   
-      if (playerOneMass > playerTwoMass) {
+      if (playerOneValue > playerTwoValue) {
         setPlayerOneScore(playerOneScore => playerOneScore + 1);
         setWinner('player one wins');
-      } else if (playerOneMass < playerTwoMass) {
+      } else if (playerOneValue < playerTwoValue) {
         setPlayerTwoScore(playerTwoScore => playerTwoScore + 1);
         setWinner('player two wins');
       }
     }
 
-    compareMass();
-  }, [playerOne, playerTwo]);
+    comparePlayers();
+  }, [playerOne, playerTwo, resourceName]);
 
   const setPlayer = (people) => {
     const person = people[Math.floor(Math.random() * people.length)];
@@ -80,7 +86,7 @@ export const Board = (props) => {
         </div>
         <div>
           <Score score={playerTwoScore} />
-          <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerOne } cardType = { resourceName } />
+          <CardType isHidden = { isPlayerDetailsHidden } cardDetail = { playerTwo } cardType = { resourceName } />
         </div>
       </div>
       <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
