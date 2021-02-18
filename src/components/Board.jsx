@@ -4,6 +4,7 @@ import { fetchResource } from '../services/fetchResource';
 import { CardType } from './CardType';
 import { InfoModal } from './InfoModal';
 import { Score } from './Score';
+import { Statistics } from './Statistics';
 
 const useStyles = makeStyles({
   personWrapper: {
@@ -104,7 +105,8 @@ export const Board = (props) => {
         <Button variant="contained" color="secondary" onClick={startFight}>Start Fight</Button>
         <Button variant="contained" color="secondary" onClick={resetGame}>Restart</Button>
       </div>
-      <InfoModal isOpened={isOpened} resetGame={resetGame} closeModal={closeModal} winner={winner}/>
+      <InfoModal isOpened={isOpened} resetGame={resetGame} closeModal={closeModal} winner={winner} />
+      <Statistics />
     </section>
   )
 }
